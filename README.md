@@ -3,8 +3,9 @@
 
 Matlab script to reproduce the data analysis.
 
-Dependencies: MEDA Toolbox v1.5 at https://github.com/codaslab/MEDA-Toolbox
-              SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
+Dependencies: 
+- MEDA Toolbox v1.5 at https://github.com/codaslab/MEDA-Toolbox
+- SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
 
 coded by: Jose Camacho Paez (josecamacho@ugr.es)
 last modification: 10/Dec/2024

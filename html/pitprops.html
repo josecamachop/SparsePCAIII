@@ -1,0 +1,863 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation"</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2024-12-11"><meta name="DC.source" content="pitprops.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation"</h1><!--introduction--><p>Submitted to Chemometrics and Intelligent Laboratory Systems. 2024</p><p>Dependencies: MEDA Toolbox v1.5 at https://github.com/codaslab/MEDA-Toolbox               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm</p><p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 10/Dec/2024</p><p>Copyright (C) 2024  University of Granada, Granada</p><p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p><p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.</p><p>You should have received a copy of the GNU General Public License along with this program.  If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Pitprops data from R package elsticnet</a></li><li><a href="#2">Zou Hui, Hastie Trevor, Tibshirani Robert. Sparse Principal Component</a></li><li><a href="#3">Compute variance estimates</a></li><li><a href="#4">PEV vs sparsity: SPCA-Z LV1</a></li><li><a href="#5">Plot scores for 1LV with 13, 5 and 1 NZE</a></li><li><a href="#6">Several plots for 1LV with 5 NZE</a></li><li><a href="#7">PEV vs sparsity: SPCA-Z multi-component</a></li><li><a href="#8">Plot the razor plot</a></li><li><a href="#9">Plot the razor plot per component</a></li><li><a href="#10">PEV vs sparsity: SPCA-Z multi-component, truncated search</a></li><li><a href="#11">Plot the truncated razor plot</a></li><li><a href="#12">Plot the truncated razor plot per component</a></li><li><a href="#13">Visualize multi-model selected with 6 components with two non-zero weights each.</a></li></ul></div><h2 id="1">Pitprops data from R package elsticnet</h2><pre class="codeinput">var_l = {<span class="string">'topdiam'</span> <span class="string">'length'</span>  <span class="string">'moist'</span> <span class="string">'testsg'</span> <span class="string">'ovensg'</span> <span class="string">'ringtop'</span> <span class="string">'ringbut'</span> <span class="string">'bowmax'</span> <span class="string">'bowdist'</span> <span class="string">'whorls'</span>  <span class="string">'clear'</span>  <span class="string">'knots'</span> <span class="string">'diaknot'</span>};
+
+XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.084 -0.019   0.134
+     0.954  1.000  0.297  0.284 -0.118   0.291   0.503  0.419   0.648  0.569  0.076 -0.036   0.144
+     0.364  0.297  1.000  0.882 -0.148   0.153  -0.029 -0.054   0.125 -0.081  0.162  0.220   0.126
+     0.342  0.284  0.882  1.000  0.220   0.381   0.174 -0.059   0.137 -0.014  0.097  0.169   0.015
+    -0.129 -0.118 -0.148  0.220  1.000   0.364   0.296  0.004  -0.039  0.037 -0.091 -0.145  -0.208
+     0.313  0.291  0.153  0.381  0.364   1.000   0.813  0.090   0.211  0.274 -0.036  0.024  -0.329
+     0.496  0.503 -0.029  0.174  0.296   0.813   1.000  0.372   0.465  0.679 -0.113 -0.232  -0.424
+     0.424  0.419 -0.054 -0.059  0.004   0.090   0.372  1.000   0.482  0.557  0.061 -0.357  -0.202
+     0.592  0.648  0.125  0.137 -0.039   0.211   0.465  0.482   1.000  0.526  0.085 -0.127  -0.076
+     0.545  0.569 -0.081 -0.014  0.037   0.274   0.679  0.557   0.526  1.000 -0.319 -0.368  -0.291
+     0.084  0.076  0.162  0.097 -0.091  -0.036  -0.113  0.061   0.085 -0.319  1.000  0.029   0.007
+    -0.019 -0.036  0.220  0.169 -0.145   0.024  -0.232 -0.357  -0.127 -0.368  0.029  1.000   0.184
+     0.134  0.144  0.126  0.015 -0.208  -0.329  -0.424 -0.202  -0.076 -0.291  0.007  0.184   1.000];
+
+addpath <span class="string">'./spasm'</span>;
+
+clc
+</pre><h2 id="2">Zou Hui, Hastie Trevor, Tibshirani Robert. Sparse Principal Component</h2><p>Analysis. Journal of Computational and Graphical Statistics. 2006;15:265&#8211;286.</p><pre class="codeinput">v = [ -0.4773598  0.00000000  0.00000000   0   0   0
+      -0.4758876  0.00000000  0.00000000   0   0   0
+       0.0000000  0.78471386  0.00000000   0   0   0
+       0.0000000  0.61935898  0.00000000   0   0   0
+       0.1765675  0.00000000  0.64065264   0   0   0
+       0.0000000  0.00000000  0.58900859   0   0   0
+      -0.2504731  0.00000000  0.49233189   0   0   0
+      -0.3440474 -0.02099748  0.00000000   0   0   0
+      -0.4163614  0.00000000  0.00000000   0   0   0
+      -0.4000254  0.00000000  0.00000000   0   0   0
+       0.0000000  0.00000000  0.00000000  -1   0   0
+       0.0000000  0.01333114  0.00000000   0  -1   0
+       0.0000000  0.00000000 -0.01556891   0   0   1];
+</pre><h2 id="3">Compute variance estimates</h2><pre class="codeinput"><span class="comment">% SPCA-Z: Compute variance estimates only based on P</span>
+
+[Vg Dg] = eig(XX);
+X = Vg*sqrt(abs(Dg))*Vg';
+
+Z = X*v;
+[Q,R] = qr(Z);
+100*diag(R(1:6,:).^2)/trace(XX)
+totV = 100*sum(diag(R(1:6,:).^2))/trace(XX)
+
+
+<span class="comment">% SPCA-Z: Compute variance estimates based on P and Q</span>
+
+b=v;
+[u,s,v]=svd(XX*b,0);
+a=u*v';
+
+Z = X*b*inv(a'*b);
+pev = zeros(6,1);
+<span class="keyword">for</span> i=1:6
+   pev(i) = trace(a(:,i)*Z(:,i)'*Z(:,i)*a(:,i)')/trace(XX);
+<span class="keyword">end</span>
+100*pev
+totV = 100*trace(a*Z'*Z*a')/trace(XX)
+
+<span class="comment">% Compute variance estimates in PCA</span>
+
+totVPCA6 = sort(diag(Dg),<span class="string">'descend'</span>);
+pcs=100*totVPCA6(1:6)/trace(XX)
+totVPCA6 = 100*sum(totVPCA6(1:6))/trace(XX)
+</pre><pre class="codeoutput">ans =
+   28.0349
+   13.9655
+   13.2982
+    7.4450
+    6.8019
+    6.2273
+totV =
+   75.7728
+ans =
+   28.0948
+   15.5257
+   15.5573
+    8.5550
+    8.6217
+    8.8288
+totV =
+   85.1833
+pcs =
+   32.4510
+   18.2931
+   14.4479
+    8.5338
+    7.0004
+    6.2724
+totVPCA6 =
+   86.9985
+</pre><h2 id="4">PEV vs sparsity: SPCA-Z LV1</h2><pre class="codeinput">NzeM = size(XX,1);
+
+[Vg Dg] = eig(XX);
+X = Vg*sqrt(abs(Dg))*Vg';
+
+PEVp = [];
+PEVpq = [];
+<span class="keyword">for</span> vec = NzeM:-1:1
+
+    p = spca_zouhastie([], XX, 1, 0, -vec);
+    [u,s,v]=svd(XX*p,0);
+    q=u*v';
+
+    PEVp(vec) = 1 - sum(sum((X - X*p*p').^2))/sum(sum(X.^2));
+    PEVpq(vec) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+
+<span class="keyword">end</span>
+
+f = figure;
+plot([1 NzeM],ones(1,2)*pcs(1)/100,<span class="string">'--'</span>)
+hold <span class="string">on</span>
+plot(1:NzeM,[PEVpq' PEVp'],<span class="string">'o-'</span>),
+plot([7 7],[0 0.4],<span class="string">'-.'</span>),
+plot([5 5],[0 0.4],<span class="string">'--'</span>),
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,14)
+ylabel(<span class="string">'PEV'</span>,<span class="string">'FontSize'</span>,16),
+xlabel(<span class="string">'Non-zero elements'</span>,<span class="string">'FontSize'</span>,16),
+axis([1,NzeM,0.0,0.4])
+legend({<span class="string">'PC_1'</span>,<span class="string">'PEV_{pq}'</span>,<span class="string">'PEV_{p}'</span>,<span class="string">'Zou et al.'</span>,<span class="string">'Ours'</span>},<span class="string">'Location'</span>,<span class="string">'southeast'</span>)
+legend(<span class="string">'boxoff'</span>)
+saveas(gcf,<span class="string">'Figures/PEV'</span>);
+saveas(gcf,<span class="string">'Figures/PEV.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_01.png" style="width:560px;height:420px;" alt=""> <h2 id="5">Plot scores for 1LV with 13, 5 and 1 NZE</h2><pre class="codeinput">p = spca_zouhastie([], XX, 1, 0, -13);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+
+plotScatter([X*p,X*q],<span class="string">'XYLabel'</span>,{<span class="string">'Xp'</span>,<span class="string">'Xq'</span>});
+hold <span class="string">on</span>
+plot([-1 0.4],[-1 0.4],<span class="string">'k--'</span>)
+saveas(gcf,<span class="string">'Figures/t13'</span>);
+saveas(gcf,<span class="string">'Figures/t13.eps'</span>,<span class="string">'epsc'</span>);
+
+p = spca_zouhastie([], XX, 1, 0, -5);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+
+plotScatter([X*p,X*q],<span class="string">'XYLabel'</span>,{<span class="string">'Xp'</span>,<span class="string">'Xq'</span>});
+hold <span class="string">on</span>
+plot([-1 0.2],[-1 0.2],<span class="string">'k--'</span>)
+saveas(gcf,<span class="string">'Figures/t5'</span>);
+saveas(gcf,<span class="string">'Figures/t5.eps'</span>,<span class="string">'epsc'</span>);
+
+p = spca_zouhastie([], XX, 1, 0, -1);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+
+plotScatter([X*p,X*q],<span class="string">'XYLabel'</span>,{<span class="string">'Xp'</span>,<span class="string">'Xq'</span>});
+hold <span class="string">on</span>
+plot([-1 0.2],[-1 0.2],<span class="string">'k--'</span>)
+saveas(gcf,<span class="string">'Figures/t1'</span>);
+saveas(gcf,<span class="string">'Figures/t1.eps'</span>,<span class="string">'epsc'</span>);
+</pre><h2 id="6">Several plots for 1LV with 5 NZE</h2><pre class="codeinput">p = spca_zouhastie([], XX, 1, 0, -5);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+r = q*inv(p'*q);
+
+plotVec(-p,<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+axis([.5 13.5 -.1 1])
+saveas(gcf,<span class="string">'Figures/p'</span>);
+saveas(gcf,<span class="string">'Figures/p.eps'</span>,<span class="string">'epsc'</span>);
+
+plotVec(-q,<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Auxiliary loadings (q)'</span>});
+axis([.5 13.5 -.1 1])
+saveas(gcf,<span class="string">'Figures/q'</span>);
+saveas(gcf,<span class="string">'Figures/q.eps'</span>,<span class="string">'epsc'</span>);
+
+plotVec(-r,<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Regressors (r)'</span>});
+axis([.5 13.5 -.1 1])
+saveas(gcf,<span class="string">'Figures/r'</span>);
+saveas(gcf,<span class="string">'Figures/r.eps'</span>,<span class="string">'epsc'</span>);
+
+f = plotMap([X*X'],<span class="string">'VarsLabel'</span>,var_l);
+a = get(f,<span class="string">'Children'</span>);
+set(a(2),<span class="string">'XTickLabelRotation'</span>,45);
+saveas(gcf,<span class="string">'Figures/map'</span>);
+saveas(gcf,<span class="string">'Figures/map.eps'</span>,<span class="string">'epsc'</span>);
+
+f = plotMap([r*p'*X'*X*p*r'],<span class="string">'VarsLabel'</span>,var_l);
+a = get(f,<span class="string">'Children'</span>);
+set(a(2),<span class="string">'XTickLabelRotation'</span>,45);
+saveas(gcf,<span class="string">'Figures/map2'</span>);
+saveas(gcf,<span class="string">'Figures/map2.eps'</span>,<span class="string">'epsc'</span>);
+</pre><h2 id="7">PEV vs sparsity: SPCA-Z multi-component</h2><pre class="codeinput">clc
+PEVpq = [];
+fp = [];
+pcs = 1:6;
+tic
+<span class="keyword">for</span> j1=1:13
+    <span class="keyword">for</span> j2= 1:j1
+        <span class="keyword">for</span> j3= 1:j2
+            <span class="keyword">for</span> j4= 1:j3
+                <span class="keyword">for</span> j5= 1:j4
+                    <span class="keyword">for</span> j6= 1:j5
+                        vec = [j1 j2 j3 j4 j5 j6];
+                        <span class="keyword">for</span> i=1:length(pcs)
+                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
+                            [u,s,v]=svd(XX*p,0);
+                            q=u*v';
+
+                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+                        <span class="keyword">end</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+total_time=toc
+
+close <span class="string">all</span>
+
+save <span class="string">search_pitpropos</span>
+</pre><pre class="codeoutput">total_time =
+   1.4335e+04
+</pre><h2 id="8">Plot the razor plot</h2><pre class="codeinput">ufp = unique(fp);
+PEVfp = [];
+<span class="keyword">for</span> i=1:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i) = PEVpq(ind(mind));
+<span class="keyword">end</span>
+
+val = num2cell(ufp(2:end));
+val{end+1} = <span class="string">'Ref'</span>;
+f = plotVec([PEVfp totVPCA6/100],<span class="string">'ObsClass'</span>,[2*ones(1,length(PEVfp)) 1]);
+legend(<span class="string">'off'</span>)
+ylabel(<span class="string">'Explained variance PEV_{pq}'</span>)
+xlabel(<span class="string">'f'</span>)
+a=get(f,<span class="string">'Children'</span>);
+
+saveas(gcf,<span class="string">'Figures/razor'</span>);
+saveas(gcf,<span class="string">'Figures/razor.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_04.png" style="width:560px;height:420px;" alt=""> <h2 id="9">Plot the razor plot per component</h2><pre class="codeinput">ufp = unique(fp);
+PEVfp2D = [];
+<span class="keyword">for</span> i=1:length(ufp)
+    <span class="keyword">for</span> j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        <span class="keyword">if</span> ~isempty(mind)
+            PEVfp2D(j,i) = PEVpq(j,ind(mind));
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure
+surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+hold <span class="string">on</span>
+pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel(<span class="string">'# Components'</span>)
+xlabel(<span class="string">'f'</span>)
+zlabel(<span class="string">'Explained variance PEV_{pq}'</span>)
+saveas(gcf,<span class="string">'Figures/surface'</span>);
+saveas(gcf,<span class="string">'Figures/surface.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_05.png" style="width:560px;height:420px;" alt=""> <h2 id="10">PEV vs sparsity: SPCA-Z multi-component, truncated search</h2><pre class="codeinput">clc
+PEVpq = [];
+fp = [];
+pcs = 1:6;
+thres = 0.05
+flag = 0;
+tic
+<span class="keyword">for</span> j1=1:13
+    <span class="keyword">for</span> j2= 1:j1
+        <span class="keyword">for</span> j3= 1:j2
+            <span class="keyword">for</span> j4= 1:j3
+                <span class="keyword">for</span> j5= 1:j4
+                    <span class="keyword">for</span> j6= 1:j5
+                        vec = [j1 j2 j3 j4 j5 j6];
+                        <span class="keyword">for</span> i=1:length(pcs)
+                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
+                            [u,s,v]=svd(XX*p,0);
+                            q=u*v';
+
+                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+
+                            <span class="keyword">if</span> (100*PEVpq(i,j1,j2,j3,j4,j5,j6)/totVPCA6) &gt; (1 - thres)
+                                 flag = 1;
+                                 <span class="keyword">break</span>
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                        <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+                    <span class="keyword">end</span>
+                    <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+<span class="keyword">end</span>
+total_time=toc
+
+close <span class="string">all</span>
+
+save <span class="string">search_pitpropos2</span>
+</pre><pre class="codeoutput">thres =
+    0.0500
+total_time =
+    0.2223
+</pre><h2 id="11">Plot the truncated razor plot</h2><pre class="codeinput">ufp = unique(fp);
+PEVfp = [];
+<span class="keyword">for</span> i=2:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i-1) = PEVpq(ind(mind));
+<span class="keyword">end</span>
+
+val = num2cell(ufp(2:end));
+val{end+1} = <span class="string">'Ref'</span>;
+f = plotVec([PEVfp totVPCA6/100],<span class="string">'ObsClass'</span>,[2*ones(1,length(PEVfp)) 1]);
+legend(<span class="string">'off'</span>)
+ylabel(<span class="string">'PEV'</span>)
+xlabel(<span class="string">'f'</span>)
+a=get(f,<span class="string">'Children'</span>);
+set(a,<span class="string">'XTickLabel'</span>,val);
+set(a,<span class="string">'XTick'</span>,1:length(val));
+set(a,<span class="string">'XTickLabelRotation'</span>,45);
+
+saveas(gcf,<span class="string">'Figures/razor2'</span>);
+saveas(gcf,<span class="string">'Figures/razor2.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_06.png" style="width:560px;height:420px;" alt=""> <h2 id="12">Plot the truncated razor plot per component</h2><pre class="codeinput">ufp = unique(fp);
+PEVfp2D = [];
+<span class="keyword">for</span> i=2:length(ufp)
+    <span class="keyword">for</span> j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        <span class="keyword">if</span> ~isempty(mind)
+            PEVfp2D(j,i-1) = PEVpq(j,ind(mind));
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure
+surf((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
+hold <span class="string">on</span>
+pcolor((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
+axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel(<span class="string">'# Components'</span>)
+xlabel(<span class="string">'f'</span>)
+zlabel(<span class="string">'PEV'</span>)
+saveas(gcf,<span class="string">'Figures/surface2'</span>);
+saveas(gcf,<span class="string">'Figures/surface2.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_07.png" style="width:560px;height:420px;" alt=""> <h2 id="13">Visualize multi-model selected with 6 components with two non-zero weights each.</h2><pre class="codeinput">p = spca_zouhastie([], XX, 6, 0, -2);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+r = q*inv(p'*q);
+
+<span class="keyword">for</span> i=pcs
+    plotVec(-p(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+    axis([.5 13.5 -1 1])
+    saveas(gcf,sprintf(<span class="string">'Figures/p%d'</span>,i));
+    saveas(gcf,sprintf(<span class="string">'Figures/p%d.eps'</span>,i),<span class="string">'epsc'</span>);
+
+    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+    axis([.5 13.5 -1 1])
+    saveas(gcf,sprintf(<span class="string">'Figures/q%d'</span>,i));
+    saveas(gcf,sprintf(<span class="string">'Figures/q%d.eps'</span>,i),<span class="string">'epsc'</span>);
+
+    f = plotMap([r(:,i)*p(:,i)'*X'*X*p(:,i)*r(:,i)']);
+    ylabel(<span class="string">'Variables'</span>,<span class="string">'Fontsize'</span>,16)
+    xlabel(<span class="string">'Variables'</span>,<span class="string">'Fontsize'</span>,16)
+    saveas(gcf,sprintf(<span class="string">'Figures/map2_%d'</span>,i));
+    saveas(gcf,sprintf(<span class="string">'Figures/map2_%d.eps'</span>,i),<span class="string">'epsc'</span>);
+<span class="keyword">end</span>
+
+f = plotMap([r*p'*X'*X*p*r'],<span class="string">'VarsLabel'</span>,var_l);
+a = get(f,<span class="string">'Children'</span>);
+set(a(2),<span class="string">'XTickLabelRotation'</span>,45);
+saveas(gcf,<span class="string">'Figures/map2_total'</span>);
+saveas(gcf,<span class="string">'Figures/map2_total.eps'</span>,<span class="string">'epsc'</span>);
+</pre><img vspace="5" hspace="5" src="pitprops_08.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_09.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_10.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_11.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_12.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_13.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_14.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_15.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_16.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_17.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_18.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_19.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_20.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_21.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_22.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_23.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_24.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_25.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="pitprops_26.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation" 
+% Submitted to Chemometrics and Intelligent Laboratory Systems. 2024
+%
+% Dependencies: MEDA Toolbox v1.5 at https://github.com/codaslab/MEDA-Toolbox
+%               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
+%
+% coded by: Jose Camacho Paez (josecamacho@ugr.es)
+% last modification: 10/Dec/2024
+%
+% Copyright (C) 2024  University of Granada, Granada
+% 
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%% Pitprops data from R package elsticnet
+
+var_l = {'topdiam' 'length'  'moist' 'testsg' 'ovensg' 'ringtop' 'ringbut' 'bowmax' 'bowdist' 'whorls'  'clear'  'knots' 'diaknot'};
+
+XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.084 -0.019   0.134
+     0.954  1.000  0.297  0.284 -0.118   0.291   0.503  0.419   0.648  0.569  0.076 -0.036   0.144
+     0.364  0.297  1.000  0.882 -0.148   0.153  -0.029 -0.054   0.125 -0.081  0.162  0.220   0.126
+     0.342  0.284  0.882  1.000  0.220   0.381   0.174 -0.059   0.137 -0.014  0.097  0.169   0.015
+    -0.129 -0.118 -0.148  0.220  1.000   0.364   0.296  0.004  -0.039  0.037 -0.091 -0.145  -0.208
+     0.313  0.291  0.153  0.381  0.364   1.000   0.813  0.090   0.211  0.274 -0.036  0.024  -0.329
+     0.496  0.503 -0.029  0.174  0.296   0.813   1.000  0.372   0.465  0.679 -0.113 -0.232  -0.424
+     0.424  0.419 -0.054 -0.059  0.004   0.090   0.372  1.000   0.482  0.557  0.061 -0.357  -0.202
+     0.592  0.648  0.125  0.137 -0.039   0.211   0.465  0.482   1.000  0.526  0.085 -0.127  -0.076
+     0.545  0.569 -0.081 -0.014  0.037   0.274   0.679  0.557   0.526  1.000 -0.319 -0.368  -0.291
+     0.084  0.076  0.162  0.097 -0.091  -0.036  -0.113  0.061   0.085 -0.319  1.000  0.029   0.007
+    -0.019 -0.036  0.220  0.169 -0.145   0.024  -0.232 -0.357  -0.127 -0.368  0.029  1.000   0.184
+     0.134  0.144  0.126  0.015 -0.208  -0.329  -0.424 -0.202  -0.076 -0.291  0.007  0.184   1.000];
+
+addpath './spasm';
+
+clc
+
+%% Zou Hui, Hastie Trevor, Tibshirani Robert. Sparse Principal Component 
+% Analysis. Journal of Computational and Graphical Statistics. 2006;15:265–286.
+
+v = [ -0.4773598  0.00000000  0.00000000   0   0   0
+      -0.4758876  0.00000000  0.00000000   0   0   0
+       0.0000000  0.78471386  0.00000000   0   0   0
+       0.0000000  0.61935898  0.00000000   0   0   0
+       0.1765675  0.00000000  0.64065264   0   0   0
+       0.0000000  0.00000000  0.58900859   0   0   0
+      -0.2504731  0.00000000  0.49233189   0   0   0
+      -0.3440474 -0.02099748  0.00000000   0   0   0
+      -0.4163614  0.00000000  0.00000000   0   0   0
+      -0.4000254  0.00000000  0.00000000   0   0   0
+       0.0000000  0.00000000  0.00000000  -1   0   0
+       0.0000000  0.01333114  0.00000000   0  -1   0
+       0.0000000  0.00000000 -0.01556891   0   0   1];
+
+%% Compute variance estimates
+
+% SPCA-Z: Compute variance estimates only based on P
+
+[Vg Dg] = eig(XX);
+X = Vg*sqrt(abs(Dg))*Vg';
+
+Z = X*v;
+[Q,R] = qr(Z);
+100*diag(R(1:6,:).^2)/trace(XX)
+totV = 100*sum(diag(R(1:6,:).^2))/trace(XX)
+
+
+% SPCA-Z: Compute variance estimates based on P and Q
+
+b=v;
+[u,s,v]=svd(XX*b,0);
+a=u*v';
+
+Z = X*b*inv(a'*b);
+pev = zeros(6,1);
+for i=1:6
+   pev(i) = trace(a(:,i)*Z(:,i)'*Z(:,i)*a(:,i)')/trace(XX);
+end
+100*pev
+totV = 100*trace(a*Z'*Z*a')/trace(XX)
+
+% Compute variance estimates in PCA
+
+totVPCA6 = sort(diag(Dg),'descend');
+pcs=100*totVPCA6(1:6)/trace(XX)
+totVPCA6 = 100*sum(totVPCA6(1:6))/trace(XX)
+
+
+%% PEV vs sparsity: SPCA-Z LV1
+
+NzeM = size(XX,1);
+
+[Vg Dg] = eig(XX);
+X = Vg*sqrt(abs(Dg))*Vg';
+  
+PEVp = [];
+PEVpq = [];
+for vec = NzeM:-1:1
+    
+    p = spca_zouhastie([], XX, 1, 0, -vec);
+    [u,s,v]=svd(XX*p,0);
+    q=u*v';
+
+    PEVp(vec) = 1 - sum(sum((X - X*p*p').^2))/sum(sum(X.^2));
+    PEVpq(vec) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+    
+end
+
+f = figure; 
+plot([1 NzeM],ones(1,2)*pcs(1)/100,'REPLACE_WITH_DASH_DASH')
+hold on
+plot(1:NzeM,[PEVpq' PEVp'],'o-'),
+plot([7 7],[0 0.4],'-.'),
+plot([5 5],[0 0.4],'REPLACE_WITH_DASH_DASH'),
+a=get(f,'Children'); set(a(1),'FontSize',14)
+ylabel('PEV','FontSize',16),
+xlabel('Non-zero elements','FontSize',16),
+axis([1,NzeM,0.0,0.4])
+legend({'PC_1','PEV_{pq}','PEV_{p}','Zou et al.','Ours'},'Location','southeast')
+legend('boxoff')
+saveas(gcf,'Figures/PEV');
+saveas(gcf,'Figures/PEV.eps','epsc');
+
+%% Plot scores for 1LV with 13, 5 and 1 NZE 
+
+p = spca_zouhastie([], XX, 1, 0, -13);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+ 
+plotScatter([X*p,X*q],'XYLabel',{'Xp','Xq'});
+hold on
+plot([-1 0.4],[-1 0.4],'kREPLACE_WITH_DASH_DASH')
+saveas(gcf,'Figures/t13');
+saveas(gcf,'Figures/t13.eps','epsc');
+
+p = spca_zouhastie([], XX, 1, 0, -5);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+ 
+plotScatter([X*p,X*q],'XYLabel',{'Xp','Xq'});
+hold on
+plot([-1 0.2],[-1 0.2],'kREPLACE_WITH_DASH_DASH')
+saveas(gcf,'Figures/t5');
+saveas(gcf,'Figures/t5.eps','epsc');
+
+p = spca_zouhastie([], XX, 1, 0, -1);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+ 
+plotScatter([X*p,X*q],'XYLabel',{'Xp','Xq'});
+hold on
+plot([-1 0.2],[-1 0.2],'kREPLACE_WITH_DASH_DASH')
+saveas(gcf,'Figures/t1');
+saveas(gcf,'Figures/t1.eps','epsc');
+
+
+%% Several plots for 1LV with 5 NZE
+
+p = spca_zouhastie([], XX, 1, 0, -5);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+r = q*inv(p'*q);
+
+plotVec(-p,'XYLabel',{'Variables','Sparse weights (p)'});
+axis([.5 13.5 -.1 1])
+saveas(gcf,'Figures/p');
+saveas(gcf,'Figures/p.eps','epsc');
+
+plotVec(-q,'XYLabel',{'Variables','Auxiliary loadings (q)'});
+axis([.5 13.5 -.1 1])
+saveas(gcf,'Figures/q');
+saveas(gcf,'Figures/q.eps','epsc');
+
+plotVec(-r,'XYLabel',{'Variables','Regressors (r)'});
+axis([.5 13.5 -.1 1])
+saveas(gcf,'Figures/r');
+saveas(gcf,'Figures/r.eps','epsc');
+
+f = plotMap([X*X'],'VarsLabel',var_l);
+a = get(f,'Children');
+set(a(2),'XTickLabelRotation',45);
+saveas(gcf,'Figures/map');
+saveas(gcf,'Figures/map.eps','epsc');
+
+f = plotMap([r*p'*X'*X*p*r'],'VarsLabel',var_l);
+a = get(f,'Children');
+set(a(2),'XTickLabelRotation',45);
+saveas(gcf,'Figures/map2');
+saveas(gcf,'Figures/map2.eps','epsc');
+
+
+%% PEV vs sparsity: SPCA-Z multi-component
+
+clc
+PEVpq = [];
+fp = [];
+pcs = 1:6;
+tic
+for j1=1:13
+    for j2= 1:j1
+        for j3= 1:j2
+            for j4= 1:j3
+                for j5= 1:j4
+                    for j6= 1:j5
+                        vec = [j1 j2 j3 j4 j5 j6];
+                        for i=1:length(pcs)
+                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
+                            [u,s,v]=svd(XX*p,0);
+                            q=u*v';
+        
+                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+                        end
+                    end
+                end
+            end
+        end
+    end  
+end
+total_time=toc
+
+close all
+
+save search_pitpropos
+
+
+%% Plot the razor plot
+
+ufp = unique(fp);
+PEVfp = [];
+for i=1:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i) = PEVpq(ind(mind));
+end
+
+val = num2cell(ufp(2:end));
+val{end+1} = 'Ref';
+f = plotVec([PEVfp totVPCA6/100],'ObsClass',[2*ones(1,length(PEVfp)) 1]);
+legend('off')
+ylabel('Explained variance PEV_{pq}')
+xlabel('f')
+a=get(f,'Children');
+
+saveas(gcf,'Figures/razor');
+saveas(gcf,'Figures/razor.eps','epsc');
+
+    
+%% Plot the razor plot per component
+
+ufp = unique(fp);
+PEVfp2D = [];
+for i=1:length(ufp)
+    for j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        if ~isempty(mind)
+            PEVfp2D(j,i) = PEVpq(j,ind(mind));
+        end
+    end
+end
+
+figure
+surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+hold on
+pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel('# Components')
+xlabel('f')
+zlabel('Explained variance PEV_{pq}')
+saveas(gcf,'Figures/surface');
+saveas(gcf,'Figures/surface.eps','epsc');
+
+
+%% PEV vs sparsity: SPCA-Z multi-component, truncated search
+
+clc
+PEVpq = [];
+fp = [];
+pcs = 1:6;
+thres = 0.05
+flag = 0;
+tic
+for j1=1:13
+    for j2= 1:j1
+        for j3= 1:j2
+            for j4= 1:j3
+                for j5= 1:j4
+                    for j6= 1:j5
+                        vec = [j1 j2 j3 j4 j5 j6];
+                        for i=1:length(pcs)
+                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
+                            [u,s,v]=svd(XX*p,0);
+                            q=u*v';
+        
+                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+                            
+                            if (100*PEVpq(i,j1,j2,j3,j4,j5,j6)/totVPCA6) > (1 - thres)                            
+                                 flag = 1; 
+                                 break
+                            end
+                        end
+                        if flag, break; end
+                    end
+                    if flag, break; end
+                end
+                if flag, break; end
+            end
+            if flag, break; end
+        end
+        if flag, break; end
+    end  
+    if flag, break; end
+end
+total_time=toc
+
+close all
+
+save search_pitpropos2
+
+
+%% Plot the truncated razor plot
+
+ufp = unique(fp);
+PEVfp = [];
+for i=2:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i-1) = PEVpq(ind(mind));
+end
+
+val = num2cell(ufp(2:end));
+val{end+1} = 'Ref';
+f = plotVec([PEVfp totVPCA6/100],'ObsClass',[2*ones(1,length(PEVfp)) 1]);
+legend('off')
+ylabel('PEV')
+xlabel('f')
+a=get(f,'Children');
+set(a,'XTickLabel',val);
+set(a,'XTick',1:length(val));
+set(a,'XTickLabelRotation',45);
+
+saveas(gcf,'Figures/razor2');
+saveas(gcf,'Figures/razor2.eps','epsc');
+
+    
+%% Plot the truncated razor plot per component
+
+ufp = unique(fp);
+PEVfp2D = [];
+for i=2:length(ufp)
+    for j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        if ~isempty(mind)
+            PEVfp2D(j,i-1) = PEVpq(j,ind(mind));
+        end
+    end
+end
+
+figure
+surf((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
+hold on
+pcolor((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
+axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel('# Components')
+xlabel('f')
+zlabel('PEV')
+saveas(gcf,'Figures/surface2');
+saveas(gcf,'Figures/surface2.eps','epsc');
+
+
+%% Visualize multi-model selected with 6 components with two non-zero weights each.
+
+p = spca_zouhastie([], XX, 6, 0, -2);
+[u,s,v]=svd(XX*p,0);
+q=u*v';
+r = q*inv(p'*q);
+
+for i=pcs
+    plotVec(-p(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    axis([.5 13.5 -1 1])
+    saveas(gcf,sprintf('Figures/p%d',i));
+    saveas(gcf,sprintf('Figures/p%d.eps',i),'epsc');
+    
+    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    axis([.5 13.5 -1 1])
+    saveas(gcf,sprintf('Figures/q%d',i));
+    saveas(gcf,sprintf('Figures/q%d.eps',i),'epsc');
+    
+    f = plotMap([r(:,i)*p(:,i)'*X'*X*p(:,i)*r(:,i)']);
+    ylabel('Variables','Fontsize',16)
+    xlabel('Variables','Fontsize',16)
+    saveas(gcf,sprintf('Figures/map2_%d',i));
+    saveas(gcf,sprintf('Figures/map2_%d.eps',i),'epsc');
+end
+
+f = plotMap([r*p'*X'*X*p*r'],'VarsLabel',var_l);
+a = get(f,'Children');
+set(a(2),'XTickLabelRotation',45);
+saveas(gcf,'Figures/map2_total');
+saveas(gcf,'Figures/map2_total.eps','epsc'); 
+
+
+##### SOURCE END #####
+--></body></html>

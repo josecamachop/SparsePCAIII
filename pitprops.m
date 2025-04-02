@@ -1,13 +1,13 @@
 %% Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation" 
-% Submitted to Chemometrics and Intelligent Laboratory Systems. 2024
+% Submitted to Chemometrics and Intelligent Laboratory Systems. 2025
 %
-% Dependencies: MEDA Toolbox v1.5 at https://github.com/codaslab/MEDA-Toolbox
+% Dependencies: MEDA Toolbox v1.8 at https://github.com/codaslab/MEDA-Toolbox
 %               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
 %
 % coded by: Jose Camacho Paez (josecamacho@ugr.es)
-% last modification: 10/Dec/2024
+% last modification: 31/Mar/2025
 %
-% Copyright (C) 2024  University of Granada, Granada
+% Copyright (C) 2025  University of Granada, Granada
 % 
 % This program is free software: you can redistribute it and/or modify
 % it under the terms of the GNU General Public License as published by
@@ -39,8 +39,6 @@ XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.
      0.084  0.076  0.162  0.097 -0.091  -0.036  -0.113  0.061   0.085 -0.319  1.000  0.029   0.007
     -0.019 -0.036  0.220  0.169 -0.145   0.024  -0.232 -0.357  -0.127 -0.368  0.029  1.000   0.184
      0.134  0.144  0.126  0.015 -0.208  -0.329  -0.424 -0.202  -0.076 -0.291  0.007  0.184   1.000];
-
-addpath './spasm';
 
 clc
 
@@ -204,6 +202,7 @@ clc
 PEVpq = [];
 fp = [];
 pcs = 1:6;
+ridge = [0 Inf];
 tic
 for j1=1:13
     for j2= 1:j1
@@ -212,13 +211,15 @@ for j1=1:13
                 for j5= 1:j4
                     for j6= 1:j5
                         vec = [j1 j2 j3 j4 j5 j6];
-                        for i=1:length(pcs)
-                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
-                            [u,s,v]=svd(XX*p,0);
-                            q=u*v';
-        
-                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
-                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+                        for j=1:length(ridge)
+                            for i=1:length(pcs)
+                                p = spca_zouhastie([], XX, pcs(i), ridge(j), -vec(1:pcs(i)));
+                                [u,s,v]=svd(XX*p,0);
+                                q=u*v';
+            
+                                fp(i,j,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                                PEVpq(i,j,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+                            end
                         end
                     end
                 end
@@ -243,7 +244,7 @@ for i=1:length(ufp)
     PEVfp(i) = PEVpq(ind(mind));
 end
 
-val = num2cell(ufp(2:end));
+val = num2cell(ufp);
 val{end+1} = 'Ref';
 f = plotVec([PEVfp totVPCA6/100],'ObsClass',[2*ones(1,length(PEVfp)) 1]);
 legend('off')
@@ -273,7 +274,7 @@ figure
 surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
 hold on
 pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
-axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+axis([ufp(1) ufp(end) pcs(1) pcs(end)])
 colorbar
 ylabel('# Components')
 xlabel('f')
@@ -288,6 +289,7 @@ clc
 PEVpq = [];
 fp = [];
 pcs = 1:6;
+ridge = [0 1 10 100 10000 Inf];
 thres = 0.05
 flag = 0;
 tic
@@ -298,17 +300,19 @@ for j1=1:13
                 for j5= 1:j4
                     for j6= 1:j5
                         vec = [j1 j2 j3 j4 j5 j6];
-                        for i=1:length(pcs)
-                            p = spca_zouhastie([], XX, pcs(i), 0, -vec(1:pcs(i)));
-                            [u,s,v]=svd(XX*p,0);
-                            q=u*v';
-        
-                            fp(i,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
-                            PEVpq(i,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
-                            
-                            if (100*PEVpq(i,j1,j2,j3,j4,j5,j6)/totVPCA6) > (1 - thres)                            
-                                 flag = 1; 
-                                 break
+                        for j=1:length(ridge)
+                            for i=1:length(pcs)
+                                p = spca_zouhastie([], XX, pcs(i), ridge(j), -vec(1:pcs(i)));
+                                [u,s,v]=svd(XX*p,0);
+                                q=u*v';
+
+                                fp(i,j,j1,j2,j3,j4,j5,j6) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                                PEVpq(i,j,j1,j2,j3,j4,j5,j6) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+
+                                if (100*PEVpq(i,j,j1,j2,j3,j4,j5,j6)/totVPCA6) > (1 - thres)
+                                    flag = 1;
+                                    break
+                                end
                             end
                         end
                         if flag, break; end
@@ -327,20 +331,18 @@ total_time=toc
 
 close all
 
-save search_pitpropos2
-
 
 %% Plot the truncated razor plot
 
 ufp = unique(fp);
 PEVfp = [];
-for i=2:length(ufp)
+for i=1:length(ufp)
     ind = find(fp == ufp(i));
     mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
-    PEVfp(i-1) = PEVpq(ind(mind));
+    PEVfp(i) = PEVpq(ind(mind));
 end
 
-val = num2cell(ufp(2:end));
+val = num2cell(ufp);
 val{end+1} = 'Ref';
 f = plotVec([PEVfp totVPCA6/100],'ObsClass',[2*ones(1,length(PEVfp)) 1]);
 legend('off')
@@ -359,27 +361,39 @@ saveas(gcf,'Figures/razor2.eps','epsc');
 
 ufp = unique(fp);
 PEVfp2D = [];
-for i=2:length(ufp)
+for i=1:length(ufp)
     for j = pcs
         ind = find(fp(j,:) == ufp(i));
         mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
         if ~isempty(mind)
-            PEVfp2D(j,i-1) = PEVpq(j,ind(mind));
+            PEVfp2D(j,i) = PEVpq(j,ind(mind));
         end
     end
 end
 
 figure
-surf((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
+surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
 hold on
-pcolor((((ones(length(pcs),1)*ufp(2:end)')))',(pcs'*ones(1,length(ufp)-1))',(PEVfp2D)')
-axis([ufp(2) ufp(end) pcs(1) pcs(end)])
+pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+axis([ufp(1) ufp(end) pcs(1) pcs(end)])
 colorbar
 ylabel('# Components')
 xlabel('f')
 zlabel('PEV')
 saveas(gcf,'Figures/surface2');
 saveas(gcf,'Figures/surface2.eps','epsc');
+
+
+%% Select ridge penalty: 0
+
+f=plotVec(PEVpq(6,:,2,2,2,2,2,2));
+legend('off')
+ylabel('PEV')
+xlabel('Ridge')
+a=get(f,'Children');
+set(a,'XTickLabel',ridge);
+saveas(gcf,'Figures/ridge');
+saveas(gcf,'Figures/ridge.eps','epsc');
 
 
 %% Visualize multi-model selected with 6 components with two non-zero weights each.

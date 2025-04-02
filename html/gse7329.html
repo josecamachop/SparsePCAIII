@@ -1,0 +1,508 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>The microarray expression data from this study have been submitted to GEO</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-04-01">
+<meta name="DC.source" content="gse7329.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1>The microarray expression data from this study have been submitted to GEO</h1>
+<!--introduction-->
+<p>under accession number GSE7329. "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation" Submitted to Chemometrics and Intelligent Laboratory Systems. 2025</p>
+<p>Dependencies: MEDA Toolbox v1.8 at <a href="https://github.com/codaslab/MEDA-Toolbox">https://github.com/codaslab/MEDA-Toolbox</a> SPASM Toolbox at <a href="https://www2.imm.dtu.dk/projects/spasm">https://www2.imm.dtu.dk/projects/spasm</a>
+</p>
+<p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 31/Mar/2025</p>
+<p>Copyright (C) 2025 University of Granada, Granada</p>
+<p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+<p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+<p>You should have received a copy of the GNU General Public License along with this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">GSE7329</a>
+</li>
+<li>
+<a href="#2">Compute variance estimates for PCA with 5 PCs</a>
+</li>
+<li>
+<a href="#3">PEV vs sparsity: SPCA-Z multi-component, truncated search</a>
+</li>
+<li>
+<a href="#4">Plot the truncated razor plot</a>
+</li>
+<li>
+<a href="#5">Plot the truncated razor plot per component</a>
+</li>
+<li>
+<a href="#6">Select ridge penalty: 0</a>
+</li>
+<li>
+<a href="#7">Visualize multi-model selected with 6 components with two non-zero weights each.</a>
+</li>
+</ul>
+</div>
+<h2 id="1">GSE7329</h2>
+<p>We add the labels: Following Guerra -Urzola et al., we discard several patients</p>
+<pre class="codeinput">load <span class="string">GSE7329_RAW.mat</span>
+
+ind = find(obs_l==<span class="string">"GSM176586"</span>); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+ind = find(obs_l==<span class="string">"GSM176589"</span>); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+ind = find(obs_l==<span class="string">"GSM176615"</span>); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+
+pcs = 1:3;
+</pre>
+<h2 id="2">Compute variance estimates for PCA with 5 PCs</h2>
+<pre class="codeinput">X = preprocess2D(X); <span class="comment">% autoscale</span>
+model = pcaEig(X,<span class="string">'PCs'</span>,pcs);
+
+scores(model,<span class="string">'obsClass'</span>,class)
+
+<span class="comment">% Compute variance estimates in PCA</span>
+Xest = model.scores*model.loads';
+E = X - Xest;
+totVPCA = 100*sum(sum(Xest.^2))/(sum(sum(Xest.^2))+sum(sum(E.^2)))
+</pre>
+<pre class="codeoutput">
+ans = 
+
+  1&times;3 Figure array:
+
+    Figure    Figure    Figure
+
+
+totVPCA =
+
+   33.0882
+
+</pre>
+<img vspace="5" hspace="5" src="gse7329_01.png" alt=""> <img vspace="5" hspace="5" src="gse7329_02.png" alt=""> <img vspace="5" hspace="5" src="gse7329_03.png" alt=""> <h2 id="3">PEV vs sparsity: SPCA-Z multi-component, truncated search</h2>
+<pre class="codeinput">clc
+PEVpq = [];
+fp = [];
+D = min(size(X));
+nze = [1:round(D/10):D 4323];
+ridge = [0 1 10 100 10000 Inf];
+thres = 0.05
+flag = 0;
+tic
+<span class="keyword">for</span> j1=1:length(nze)
+    <span class="keyword">for</span> j2= 1:j1
+        <span class="keyword">for</span> j3= 1:j2
+            vec = nze([j1 j2 j3])
+            <span class="keyword">for</span> j=1:length(ridge)
+                <span class="keyword">for</span> i=1:length(pcs)
+                    p = spca_zouhastie(X, [], pcs(i), ridge(j), -vec(1:pcs(i)));
+                    t = X*p;
+                    [u,s,v]=svd(X'*t,0);
+                    q=u*v';
+
+                    fp(i,j,j1,j2,j3) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                    PEVpq(i,j,j1,j2,j3) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+
+                    <span class="keyword">if</span> (100*PEVpq(i,j,j1,j2,j3)/totVPCA) &gt; (1 - thres)
+                        flag = 1;
+                        <span class="keyword">break</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> flag, <span class="keyword">break</span>; <span class="keyword">end</span>
+<span class="keyword">end</span>
+total_time=toc
+
+close <span class="string">all</span>
+</pre>
+<pre class="codeoutput">
+thres =
+
+    0.0500
+
+
+vec =
+
+     1     1     1
+
+
+vec =
+
+     4     1     1
+
+
+total_time =
+
+    5.0909
+
+</pre>
+<h2 id="4">Plot the truncated razor plot</h2>
+<pre class="codeinput">ufp = unique(fp);
+PEVfp = [];
+<span class="keyword">for</span> i=1:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i) = PEVpq(ind(mind));
+<span class="keyword">end</span>
+
+val = num2cell(ufp);
+val{end+1} = <span class="string">'Ref'</span>;
+f = plotVec([PEVfp totVPCA/100],<span class="string">'ObsClass'</span>,[2*ones(1,length(PEVfp)) 1]);
+legend(<span class="string">'off'</span>)
+ylabel(<span class="string">'PEV'</span>)
+xlabel(<span class="string">'f'</span>)
+a=get(f,<span class="string">'Children'</span>);
+set(a,<span class="string">'XTickLabel'</span>,val);
+set(a,<span class="string">'XTick'</span>,1:length(val));
+set(a,<span class="string">'XTickLabelRotation'</span>,45);
+
+saveas(gcf,<span class="string">'Figures/razorgse'</span>);
+saveas(gcf,<span class="string">'Figures/razorgse.eps'</span>,<span class="string">'epsc'</span>);
+</pre>
+<img vspace="5" hspace="5" src="gse7329_04.png" alt=""> <h2 id="5">Plot the truncated razor plot per component</h2>
+<pre class="codeinput">ufp = unique(fp);
+PEVfp2D = [];
+<span class="keyword">for</span> i=1:length(ufp)
+    <span class="keyword">for</span> j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        <span class="keyword">if</span> ~isempty(mind)
+            PEVfp2D(j,i) = PEVpq(j,ind(mind));
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+figure
+surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+hold <span class="string">on</span>
+pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+axis([ufp(1) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel(<span class="string">'# Components'</span>)
+xlabel(<span class="string">'f'</span>)
+zlabel(<span class="string">'PEV'</span>)
+saveas(gcf,<span class="string">'Figures/surfacegse'</span>);
+saveas(gcf,<span class="string">'Figures/surfacegse.eps'</span>,<span class="string">'epsc'</span>);
+</pre>
+<img vspace="5" hspace="5" src="gse7329_05.png" alt=""> <h2 id="6">Select ridge penalty: 0</h2>
+<pre class="codeinput">f=plotVec(PEVpq(3,:,2,1,1));
+legend(<span class="string">'off'</span>)
+ylabel(<span class="string">'PEV'</span>)
+xlabel(<span class="string">'Ridge'</span>)
+a=get(f,<span class="string">'Children'</span>);
+set(a,<span class="string">'XTickLabel'</span>,ridge);
+saveas(gcf,<span class="string">'Figures/ridgegse5'</span>);
+saveas(gcf,<span class="string">'Figures/ridgegse5.eps'</span>,<span class="string">'epsc'</span>);
+</pre>
+<img vspace="5" hspace="5" src="gse7329_06.png" alt=""> <h2 id="7">Visualize multi-model selected with 6 components with two non-zero weights each.</h2>
+<pre class="codeinput">p = spca_zouhastie(X, [], 3, 0, -vec);
+t = X*p;
+[u,s,v]=svd(X'*t,0);
+q=u*v';
+r = q*inv(p'*q);
+
+model.scores = t*inv(p'*q);
+f = scores(model,<span class="string">'obsClass'</span>,class);
+<span class="keyword">for</span> i=1:length(f)
+    figure(f(i))
+    saveas(gcf,sprintf(<span class="string">'Figures/scoresgse%d'</span>,i));
+    saveas(gcf,sprintf(<span class="string">'Figures/scoresgse%d.eps'</span>,i),<span class="string">'epsc'</span>);
+<span class="keyword">end</span>
+
+<span class="keyword">for</span> i=pcs
+    var_l{find(p(:,i)),1}
+
+    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+    saveas(gcf,sprintf(<span class="string">'Figures/qgse%d'</span>,i));
+    saveas(gcf,sprintf(<span class="string">'Figures/qgse%d.eps'</span>,i),<span class="string">'epsc'</span>);
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">
+ans =
+
+  4&times;1 cell array
+
+    {'NM_001008709'   }
+    {'NM_002951'      }
+    {'NM_153649'      }
+    {'ENST00000307106'}
+
+
+ans =
+
+  1&times;1 cell array
+
+    {'NM_001008756'}
+
+
+ans =
+
+  1&times;1 cell array
+
+    {'ENST00000282169'}
+
+</pre>
+<img vspace="5" hspace="5" src="gse7329_07.png" alt=""> <img vspace="5" hspace="5" src="gse7329_08.png" alt=""> <img vspace="5" hspace="5" src="gse7329_09.png" alt=""> <img vspace="5" hspace="5" src="gse7329_10.png" alt=""> <img vspace="5" hspace="5" src="gse7329_11.png" alt=""> <img vspace="5" hspace="5" src="gse7329_12.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%% The microarray expression data from this study have been submitted to GEO 
+% under accession number GSE7329. "All Sparse PCA Models Are Wrong, But 
+% Some Are Useful. Part III: model interpretation" 
+% Submitted to Chemometrics and Intelligent Laboratory Systems. 2025
+%
+% Dependencies: MEDA Toolbox v1.8 at https://github.com/codaslab/MEDA-Toolbox
+%               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
+%
+% coded by: Jose Camacho Paez (josecamacho@ugr.es)
+% last modification: 31/Mar/2025
+%
+% Copyright (C) 2025  University of Granada, Granada
+% 
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%% GSE7329
+% We add the labels: 
+% Following Guerra -Urzola et al., we discard several patients
+
+load GSE7329_RAW.mat
+
+ind = find(obs_l=="GSM176586"); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+ind = find(obs_l=="GSM176589"); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+ind = find(obs_l=="GSM176615"); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
+
+pcs = 1:3;
+
+
+%% Compute variance estimates for PCA with 5 PCs
+
+X = preprocess2D(X); % autoscale
+model = pcaEig(X,'PCs',pcs);
+
+scores(model,'obsClass',class)
+
+% Compute variance estimates in PCA
+Xest = model.scores*model.loads';
+E = X - Xest;
+totVPCA = 100*sum(sum(Xest.^2))/(sum(sum(Xest.^2))+sum(sum(E.^2)))
+
+%% PEV vs sparsity: SPCA-Z multi-component, truncated search
+
+clc
+PEVpq = [];
+fp = [];
+D = min(size(X));
+nze = [1:round(D/10):D 4323];
+ridge = [0 1 10 100 10000 Inf];
+thres = 0.05
+flag = 0;
+tic
+for j1=1:length(nze)
+    for j2= 1:j1
+        for j3= 1:j2
+            vec = nze([j1 j2 j3])
+            for j=1:length(ridge)
+                for i=1:length(pcs)
+                    p = spca_zouhastie(X, [], pcs(i), ridge(j), -vec(1:pcs(i)));
+                    t = X*p;
+                    [u,s,v]=svd(X'*t,0);
+                    q=u*v';
+
+                    fp(i,j,j1,j2,j3) = length(find(p.^2)) - length(find(sum(p.^2,1)));
+                    PEVpq(i,j,j1,j2,j3) = 1 - sum(sum((X - X*p*inv(q'*p)*q').^2))/sum(sum(X.^2));
+
+                    if (100*PEVpq(i,j,j1,j2,j3)/totVPCA) > (1 - thres)
+                        flag = 1;
+                        break
+                    end
+                end
+            end
+            if flag, break; end
+        end
+        if flag, break; end
+    end
+    if flag, break; end
+end
+total_time=toc
+
+close all
+
+%% Plot the truncated razor plot
+
+ufp = unique(fp);
+PEVfp = [];
+for i=1:length(ufp)
+    ind = find(fp == ufp(i));
+    mind = find(PEVpq(ind)==max(PEVpq(ind)),1);
+    PEVfp(i) = PEVpq(ind(mind));
+end
+
+val = num2cell(ufp);
+val{end+1} = 'Ref';
+f = plotVec([PEVfp totVPCA/100],'ObsClass',[2*ones(1,length(PEVfp)) 1]);
+legend('off')
+ylabel('PEV')
+xlabel('f')
+a=get(f,'Children');
+set(a,'XTickLabel',val);
+set(a,'XTick',1:length(val));
+set(a,'XTickLabelRotation',45);
+
+saveas(gcf,'Figures/razorgse');
+saveas(gcf,'Figures/razorgse.eps','epsc');
+
+    
+%% Plot the truncated razor plot per component
+
+ufp = unique(fp);
+PEVfp2D = [];
+for i=1:length(ufp)
+    for j = pcs
+        ind = find(fp(j,:) == ufp(i));
+        mind = find(PEVpq(j,ind)==max(PEVpq(j,ind)),1);
+        if ~isempty(mind)
+            PEVfp2D(j,i) = PEVpq(j,ind(mind));
+        end
+    end
+end
+
+figure
+surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+hold on
+pcolor((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
+axis([ufp(1) ufp(end) pcs(1) pcs(end)])
+colorbar
+ylabel('# Components')
+xlabel('f')
+zlabel('PEV')
+saveas(gcf,'Figures/surfacegse');
+saveas(gcf,'Figures/surfacegse.eps','epsc');
+
+
+%% Select ridge penalty: 0
+
+f=plotVec(PEVpq(3,:,2,1,1));
+legend('off')
+ylabel('PEV')
+xlabel('Ridge')
+a=get(f,'Children');
+set(a,'XTickLabel',ridge);
+saveas(gcf,'Figures/ridgegse5');
+saveas(gcf,'Figures/ridgegse5.eps','epsc');
+
+
+%% Visualize multi-model selected with 6 components with two non-zero weights each.
+
+p = spca_zouhastie(X, [], 3, 0, -vec);
+t = X*p;
+[u,s,v]=svd(X'*t,0);
+q=u*v';
+r = q*inv(p'*q);
+
+model.scores = t*inv(p'*q);
+f = scores(model,'obsClass',class);
+for i=1:length(f)
+    figure(f(i))
+    saveas(gcf,sprintf('Figures/scoresgse%d',i));
+    saveas(gcf,sprintf('Figures/scoresgse%d.eps',i),'epsc');
+end
+
+for i=pcs
+    var_l{find(p(:,i)),1}
+
+    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    saveas(gcf,sprintf('Figures/qgse%d',i));
+    saveas(gcf,sprintf('Figures/qgse%d.eps',i),'epsc');
+end
+
+##### SOURCE END #####
+-->
+</body>
+</html>

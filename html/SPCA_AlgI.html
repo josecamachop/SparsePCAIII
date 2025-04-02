@@ -1,0 +1,369 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>SPCA_AlgI</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2025-03-26"><meta name="DC.source" content="SPCA_AlgI.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Data simulation</a></li><li><a href="#3">SPCA simultaneous uncorrected (SPCA I)</a></li><li><a href="#4">SPCA simultaneous corrected only with P (SPCA II)</a></li><li><a href="#5">SPCA simultaneous properly corrected (SPCA III)</a></li><li><a href="#6">PLOTs</a></li></ul></div><pre class="codeinput"><span class="comment">% Alg I from Guerra-Urzola et al. psychometrika 86.4 (2021): 893-919.</span>
+<span class="comment">% Results for SPCA of Zou et al. consisten with the mismatching sparsity,</span>
+<span class="comment">% Fig 3. We chose the situation in which SPCA showed the worst performance</span>
+<span class="comment">% in comparison to GPower in the paper, namely:</span>
+<span class="comment">%</span>
+<span class="comment">% Number of PCs: 2</span>
+<span class="comment">% Number of observations (I): 500</span>
+<span class="comment">% Number of variables (J): 1000</span>
+<span class="comment">% Sparsity: 80%</span>
+<span class="comment">% VAF: 80%</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+<span class="comment">% Requierements: MEDA Toolbox v1.3</span>
+<span class="comment">%</span>
+<span class="comment">% coded by: Torfinn St&oslash;ve Madssen (torfinn.s.madssen@ntnu.no)</span>
+<span class="comment">%       Jose Camacho Paez (josecamacho@ugr.es)</span>
+<span class="comment">% last modification: 26/March/2025</span>
+<span class="comment">%</span>
+<span class="comment">% This program is free software: you can redistribute it and/or modify</span>
+<span class="comment">% it under the terms of the GNU General Public License as published by</span>
+<span class="comment">% the Free Software Foundation, either version 3 of the License, or</span>
+<span class="comment">% (at your option) any later version.</span>
+<span class="comment">%</span>
+<span class="comment">% This program is distributed in the hope that it will be useful,</span>
+<span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="comment">% GNU General Public License for more details.</span>
+<span class="comment">%</span>
+<span class="comment">% You should have received a copy of the GNU General Public License</span>
+<span class="comment">% along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+</pre><h2 id="2">Data simulation</h2><pre class="codeinput">clear
+close <span class="string">all</span>
+clc
+
+pev = @(A,B) 1 - (norm(A - B,<span class="string">'fro'</span>)^2)/(norm(A,<span class="string">'fro'</span>)^2);
+
+pcs = 1:2
+obs = 500
+vars = 1000
+sparsity = 80
+s2n = 80
+
+ridge = Inf
+
+nonzero = round(vars*(1-sparsity/100));
+
+X = randn(obs,vars);
+[U,D,V] = svd(X,0);
+U = U(:,pcs);
+D = D(pcs,pcs);
+V = V(:,pcs);
+
+<span class="keyword">for</span> i = pcs <span class="comment">% sparsize</span>
+    kk = sort(abs(V(:,i)),<span class="string">'descend'</span>);
+    V(find(abs(V(:,i))&lt;kk(nonzero)),i) = 0;
+    V(:,i) = V(:,i)/norm(V(:,i));
+<span class="keyword">end</span>
+
+P = V*D;
+T = U;
+
+X = T*P';
+E = randn(size(X));
+f = sqrt((1-s2n/100)*(norm(X,<span class="string">'fro'</span>)^2)/((s2n/100)*(norm(E,<span class="string">'fro'</span>)^2)));
+X = X + f*E;
+</pre><pre class="codeoutput">pcs =
+     1     2
+obs =
+   500
+vars =
+        1000
+sparsity =
+    80
+s2n =
+    80
+ridge =
+   Inf
+</pre><h2 id="3">SPCA simultaneous uncorrected (SPCA I)</h2><pre class="codeinput">vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+
+t7 = X*p7;
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+p7u = repmat(sig',vars,1).*p7; <span class="comment">% sign correction</span>
+t7u = repmat(sig',obs,1).*t7;
+
+CS_LW_u = cossim(V,p7u)
+CS_S_u = cossim(T,t7u)
+PEV_u = pev(X,t7u*p7u')
+</pre><pre class="codeoutput">CS_LW_u =
+    0.9998
+CS_S_u =
+    0.9997
+PEV_u =
+    0.8002
+</pre><h2 id="4">SPCA simultaneous corrected only with P (SPCA II)</h2><pre class="codeinput">vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+
+t7 = X*p7*pinv(p7'*p7);
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+p7c = repmat(sig',vars,1).*p7; <span class="comment">% sign correction</span>
+t7c = repmat(sig',obs,1).*t7;
+
+CS_LW_c = cossim(V,p7c)
+CS_S_c = cossim(T,t7c)
+PEV_c = pev(X,t7c*p7c')
+</pre><pre class="codeoutput">CS_LW_c =
+    0.9998
+CS_S_c =
+    0.9997
+PEV_c =
+    0.8003
+</pre><h2 id="5">SPCA simultaneous properly corrected (SPCA III)</h2><pre class="codeinput">vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+[u,s,v]=svd(X'*X*p7,0);
+q7=u*v';
+
+t7 = X*p7*pinv(q7'*p7);
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+q7 = repmat(sig',vars,1).*q7; <span class="comment">% sign correction</span>
+t7q = repmat(sig',obs,1).*t7;
+
+CS_LW_u = cossim(V,p7u)
+CS_S_u = cossim(T,t7q)
+PEV_u = pev(X,t7q*q7')
+</pre><pre class="codeoutput">CS_LW_u =
+    0.9998
+CS_S_u =
+    0.9997
+PEV_u =
+    0.8011
+</pre><h2 id="6">PLOTs</h2><pre class="codeinput">f = figure; subplot(2,1,1), hold <span class="string">on</span>, plot(T(:,pcs),<span class="string">'o-'</span>),
+a=get(f,<span class="string">'Children'</span>); set(a,<span class="string">'FontSize'</span>,20)
+plot([1 obs],[0 0],<span class="string">'k--'</span>),
+title(<span class="string">'Simulated'</span>,<span class="string">'FontSize'</span>,20), subplot(2,1,2), hold <span class="string">on</span>, bar(P(:,pcs)),axis <span class="string">tight</span>
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,20)
+
+f = figure; subplot(2,1,1), hold <span class="string">on</span>, plot(t7u(:,pcs),<span class="string">'o-'</span>),
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,20)
+plot([1 obs],[0 0],<span class="string">'k--'</span>),
+title(<span class="string">'SPCA uncorrected'</span>,<span class="string">'FontSize'</span>,20), subplot(2,1,2), hold <span class="string">on</span>, bar(p7u(:,pcs)),axis <span class="string">tight</span>
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,20)
+
+f = figure; subplot(2,1,1), hold <span class="string">on</span>, plot(t7c(:,pcs),<span class="string">'o-'</span>),
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,20)
+plot([1 obs],[0 0],<span class="string">'k--'</span>),
+title(<span class="string">'SPCA corrected'</span>,<span class="string">'FontSize'</span>,20), subplot(2,1,2), hold <span class="string">on</span>, bar(p7c(:,pcs)),axis <span class="string">tight</span>
+a=get(f,<span class="string">'Children'</span>); set(a(1),<span class="string">'FontSize'</span>,20)
+</pre><img vspace="5" hspace="5" src="SPCA_AlgI_01.png" alt=""> <img vspace="5" hspace="5" src="SPCA_AlgI_02.png" alt=""> <img vspace="5" hspace="5" src="SPCA_AlgI_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Alg I from Guerra-Urzola et al. psychometrika 86.4 (2021): 893-919. 
+% Results for SPCA of Zou et al. consisten with the mismatching sparsity,
+% Fig 3. We chose the situation in which SPCA showed the worst performance
+% in comparison to GPower in the paper, namely:
+%
+% Number of PCs: 2
+% Number of observations (I): 500
+% Number of variables (J): 1000
+% Sparsity: 80%
+% VAF: 80%
+%
+%
+% Requierements: MEDA Toolbox v1.3
+%
+% coded by: Torfinn Støve Madssen (torfinn.s.madssen@ntnu.no)
+%       Jose Camacho Paez (josecamacho@ugr.es)
+% last modification: 26/March/2025
+% 
+% This program is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+% 
+% You should have received a copy of the GNU General Public License
+% along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+%% Data simulation
+
+clear 
+close all  
+clc
+
+pev = @(A,B) 1 - (norm(A - B,'fro')^2)/(norm(A,'fro')^2);
+
+pcs = 1:2
+obs = 500
+vars = 1000
+sparsity = 80
+s2n = 80
+
+ridge = Inf
+    
+nonzero = round(vars*(1-sparsity/100));
+
+X = randn(obs,vars);
+[U,D,V] = svd(X,0);
+U = U(:,pcs);
+D = D(pcs,pcs);
+V = V(:,pcs);
+
+for i = pcs % sparsize
+    kk = sort(abs(V(:,i)),'descend');
+    V(find(abs(V(:,i))<kk(nonzero)),i) = 0;
+    V(:,i) = V(:,i)/norm(V(:,i));
+end
+
+P = V*D;
+T = U;
+
+X = T*P'; 
+E = randn(size(X));
+f = sqrt((1-s2n/100)*(norm(X,'fro')^2)/((s2n/100)*(norm(E,'fro')^2)));
+X = X + f*E;
+
+
+%% SPCA simultaneous uncorrected (SPCA I)
+
+vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+
+t7 = X*p7;
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+p7u = repmat(sig',vars,1).*p7; % sign correction
+t7u = repmat(sig',obs,1).*t7;
+
+CS_LW_u = cossim(V,p7u)
+CS_S_u = cossim(T,t7u)
+PEV_u = pev(X,t7u*p7u') 
+
+%% SPCA simultaneous corrected only with P (SPCA II)
+
+vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+
+t7 = X*p7*pinv(p7'*p7);
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+p7c = repmat(sig',vars,1).*p7; % sign correction
+t7c = repmat(sig',obs,1).*t7;
+
+CS_LW_c = cossim(V,p7c)
+CS_S_c = cossim(T,t7c)
+PEV_c = pev(X,t7c*p7c') 
+
+
+%% SPCA simultaneous properly corrected (SPCA III)
+
+vec = nonzero*ones(size(pcs));
+p7 = spca_zouhastie(X, [], max(pcs), ridge, -vec);
+[u,s,v]=svd(X'*X*p7,0);
+q7=u*v';
+
+t7 = X*p7*pinv(q7'*p7);
+
+sig = sign(diag(P'*p7));
+sig(find(sig==0)) = 1;
+q7 = repmat(sig',vars,1).*q7; % sign correction
+t7q = repmat(sig',obs,1).*t7;
+
+CS_LW_u = cossim(V,p7u)
+CS_S_u = cossim(T,t7q)
+PEV_u = pev(X,t7q*q7') 
+
+
+%% PLOTs
+
+f = figure; subplot(2,1,1), hold on, plot(T(:,pcs),'o-'),
+a=get(f,'Children'); set(a,'FontSize',20)
+plot([1 obs],[0 0],'kREPLACE_WITH_DASH_DASH'),
+title('Simulated','FontSize',20), subplot(2,1,2), hold on, bar(P(:,pcs)),axis tight 
+a=get(f,'Children'); set(a(1),'FontSize',20)
+
+f = figure; subplot(2,1,1), hold on, plot(t7u(:,pcs),'o-'), 
+a=get(f,'Children'); set(a(1),'FontSize',20)
+plot([1 obs],[0 0],'kREPLACE_WITH_DASH_DASH'),
+title('SPCA uncorrected','FontSize',20), subplot(2,1,2), hold on, bar(p7u(:,pcs)),axis tight 
+a=get(f,'Children'); set(a(1),'FontSize',20)
+
+f = figure; subplot(2,1,1), hold on, plot(t7c(:,pcs),'o-'), 
+a=get(f,'Children'); set(a(1),'FontSize',20)
+plot([1 obs],[0 0],'kREPLACE_WITH_DASH_DASH'),
+title('SPCA corrected','FontSize',20), subplot(2,1,2), hold on, bar(p7c(:,pcs)),axis tight 
+a=get(f,'Children'); set(a(1),'FontSize',20)
+
+
+##### SOURCE END #####
+--></body></html>

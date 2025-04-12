@@ -270,6 +270,8 @@ for i=1:length(ufp)
     end
 end
 
+PEVfp2D(find(PEVfp2D==0)) = nan;
+
 figure
 surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
 hold on

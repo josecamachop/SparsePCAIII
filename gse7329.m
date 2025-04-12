@@ -42,7 +42,12 @@ pcs = 1:3;
 X = preprocess2D(X); % autoscale
 model = pcaEig(X,'PCs',pcs);
 
-scores(model,'obsClass',class)
+fig = scores(model,'obsClass',class);
+for i=1:length(fig)
+    figure(fig(i))
+    saveas(gcf,sprintf('Figures/scoresPCAgse%d',i));
+    saveas(gcf,sprintf('Figures/scoresPCAgse%d.eps',i),'epsc');
+end
 
 % Compute variance estimates in PCA
 Xest = model.scores*model.loads';
@@ -54,10 +59,10 @@ totVPCA = 100*sum(sum(Xest.^2))/(sum(sum(Xest.^2))+sum(sum(E.^2)))
 clc
 PEVpq = [];
 fp = [];
-D = min(size(X));
-nze = [1:round(D/10):D 4323];
+D = min(size(X))-1;
+nze = [1:round(D/10):D 41675];
 ridge = [0 1 10 100 10000 Inf];
-thres = 0.05
+thres = 0.03
 flag = 0;
 tic
 for j1=1:length(nze)
@@ -166,14 +171,14 @@ model.scores = t*inv(p'*q);
 f = scores(model,'obsClass',class);
 for i=1:length(f)
     figure(f(i))
-    saveas(gcf,sprintf('Figures/scoresgse%d',i));
-    saveas(gcf,sprintf('Figures/scoresgse%d.eps',i),'epsc');
+    saveas(gcf,sprintf('Figures/scoressPCAgse%d',i));
+    saveas(gcf,sprintf('Figures/scoressPCAgse%d.eps',i),'epsc');
 end
 
 for i=pcs
     var_l{find(p(:,i)),1}
 
-    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    plotVec(-q(:,i),'XYLabel',{'Variables',sprintf('Auxiliary loadings (q_%d)',i)});
     saveas(gcf,sprintf('Figures/qgse%d',i));
     saveas(gcf,sprintf('Figures/qgse%d.eps',i),'epsc');
 end

@@ -5,7 +5,7 @@
 %               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
 %
 % coded by: Jose Camacho Paez (josecamacho@ugr.es)
-% last modification: 31/Mar/2025
+% last modification: 10/Apr/2025
 %
 % Copyright (C) 2025  University of Granada, Granada
 % 
@@ -167,8 +167,7 @@ saveas(gcf,'Figures/ridgeBig5');
 saveas(gcf,'Figures/ridgeBig5.eps','epsc');
 
 
-%% Visualize multi-model selected with 6 components with two non-zero weights each.
-
+%% Visualize multi-model selected with 5 components with two non-zero weights each.
 
 p = spca_zouhastie(X, [], max(pcs), 10, -vec);
 
@@ -177,11 +176,18 @@ q=u*v';
 r = q*inv(p'*q);
 
 for i=pcs
-    plotVec(p(:,i),'XYLabel',{'Variables','Sparse weights (p)'},'ObsClass',var_class);
+    plotVec(p(:,i),'XYLabel',{'Variables',sprintf('Sparse weights (p_%d)',i)},'ObsClass',var_class);
+    legend('Location','southeast');
+    if i>1, legend('off'); end
     saveas(gcf,sprintf('Figures/pBig5%d',i));
     saveas(gcf,sprintf('Figures/pBig5%d.eps',i),'epsc');
 
-    plotVec(q(:,i),'XYLabel',{'Variables','Sparse weights (p)'},'ObsClass',var_class);
+    for j=1:5
+        restab(j,i) = sum(p((j-1)*48+1:j*48,i)~=0);
+    end
+
+    plotVec(q(:,i),'XYLabel',{'Variables',sprintf('Auxiliary loadings (q_%d)',i)},'ObsClass',var_class);
+    if i>1, legend('off'); end
     saveas(gcf,sprintf('Figures/qBig5%d',i));
     saveas(gcf,sprintf('Figures/qBig5%d.eps',i),'epsc');
 
@@ -191,6 +197,10 @@ for i=pcs
     saveas(gcf,sprintf('Figures/mapBig5_%d',i));
     saveas(gcf,sprintf('Figures/mapBig5_%d.eps',i),'epsc');
 end
+restab(6,:) = sum(restab);
+rows = unique(var_class);
+rows(end+1) = 'Total nonzero';
+T = table(restab(:,1),restab(:,4),restab(:,3),restab(:,4),restab(:,5),'VariableNames',{'w_1','w_2','w_3','w_4','w_5'},'RowNames',rows)
 
 f = plotMap(1/(size(X,1)-1)*[r*p'*X'*X*p*r'],'VarsLabel',var_l);
 a = get(f,'Children');

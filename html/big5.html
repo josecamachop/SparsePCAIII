@@ -9,7 +9,7 @@ To make changes, update the MATLAB code and republish this document.
 <title>Big5 from R package qgraph "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation"</title>
 <meta name="generator" content="MATLAB 24.2">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-04-01">
+<meta name="DC.date" content="2025-04-11">
 <meta name="DC.source" content="big5.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -81,7 +81,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <p>Submitted to Chemometrics and Intelligent Laboratory Systems. 2025</p>
 <p>Dependencies: MEDA Toolbox v1.8 at <a href="https://github.com/codaslab/MEDA-Toolbox">https://github.com/codaslab/MEDA-Toolbox</a> SPASM Toolbox at <a href="https://www2.imm.dtu.dk/projects/spasm">https://www2.imm.dtu.dk/projects/spasm</a>
 </p>
-<p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 31/Mar/2025</p>
+<p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 10/Apr/2025</p>
 <p>Copyright (C) 2025 University of Granada, Granada</p>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
@@ -109,7 +109,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <a href="#6">Select ridge penalty: 10</a>
 </li>
 <li>
-<a href="#7">Visualize multi-model selected with 6 components with two non-zero weights each.</a>
+<a href="#7">Visualize multi-model selected with 5 components with two non-zero weights each.</a>
 </li>
 </ul>
 </div>
@@ -147,12 +147,12 @@ totVPCA = 100*sum(sum(Xest.^2))/trace(X'*X)
 <pre class="codeoutput">
 ans = 
 
-  Figure (2) with properties:
+  Figure (20) with properties:
 
-      Number: 2
+      Number: 20
         Name: ''
        Color: [0.9400 0.9400 0.9400]
-    Position: [680 458 560 420]
+    Position: [440 338 560 420]
        Units: 'pixels'
 
   Use GET to show all properties
@@ -316,7 +316,7 @@ vec =
 
 total_time =
 
-  380.1288
+  295.0004
 
 </pre>
 <h2 id="4">Plot the truncated razor plot</h2>
@@ -379,16 +379,19 @@ saveas(gcf,<span class="string">'Figures/ridgeBig5.eps'</span>,<span class="stri
 </pre>
 <img vspace="5" hspace="5" src="big5_04.png" alt=""> <h2 id="7">Visualize multi-model selected with 6 components with two non-zero weights each.</h2>
 <pre class="codeinput">p = spca_zouhastie(X, [], max(pcs), 10, -vec);
+
 [u,s,v]=svd(X'*X*p,0);
 q=u*v';
 r = q*inv(p'*q);
 
 <span class="keyword">for</span> i=pcs
-    plotVec(p(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>},<span class="string">'ObsClass'</span>,var_class);
+    plotVec(p(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,sprintf(<span class="string">'Sparse weights (p_%d)'</span>,i)},<span class="string">'ObsClass'</span>,var_class);
+    <span class="keyword">if</span> i&gt;1, legend(<span class="string">'off'</span>); <span class="keyword">end</span>
     saveas(gcf,sprintf(<span class="string">'Figures/pBig5%d'</span>,i));
     saveas(gcf,sprintf(<span class="string">'Figures/pBig5%d.eps'</span>,i),<span class="string">'epsc'</span>);
 
-    plotVec(q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>},<span class="string">'ObsClass'</span>,var_class);
+    plotVec(q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,sprintf(<span class="string">'Auxiliary loadings (q_%d)'</span>,i)},<span class="string">'ObsClass'</span>,var_class);
+    <span class="keyword">if</span> i&gt;1, legend(<span class="string">'off'</span>); <span class="keyword">end</span>
     saveas(gcf,sprintf(<span class="string">'Figures/qBig5%d'</span>,i));
     saveas(gcf,sprintf(<span class="string">'Figures/qBig5%d.eps'</span>,i),<span class="string">'epsc'</span>);
 
@@ -420,7 +423,7 @@ saveas(gcf,<span class="string">'Figures/mapBig5_total.eps'</span>,<span class="
 %               SPASM Toolbox at https://www2.imm.dtu.dk/projects/spasm
 %
 % coded by: Jose Camacho Paez (josecamacho@ugr.es)
-% last modification: 31/Mar/2025
+% last modification: 10/Apr/2025
 %
 % Copyright (C) 2025  University of Granada, Granada
 % 
@@ -584,17 +587,21 @@ saveas(gcf,'Figures/ridgeBig5.eps','epsc');
 
 %% Visualize multi-model selected with 6 components with two non-zero weights each.
 
+
 p = spca_zouhastie(X, [], max(pcs), 10, -vec);
+
 [u,s,v]=svd(X'*X*p,0);
 q=u*v';
 r = q*inv(p'*q);
 
 for i=pcs
-    plotVec(p(:,i),'XYLabel',{'Variables','Sparse weights (p)'},'ObsClass',var_class);
+    plotVec(p(:,i),'XYLabel',{'Variables',sprintf('Sparse weights (p_%d)',i)},'ObsClass',var_class);
+    if i>1, legend('off'); end
     saveas(gcf,sprintf('Figures/pBig5%d',i));
     saveas(gcf,sprintf('Figures/pBig5%d.eps',i),'epsc');
 
-    plotVec(q(:,i),'XYLabel',{'Variables','Sparse weights (p)'},'ObsClass',var_class);
+    plotVec(q(:,i),'XYLabel',{'Variables',sprintf('Auxiliary loadings (q_%d)',i)},'ObsClass',var_class);
+    if i>1, legend('off'); end
     saveas(gcf,sprintf('Figures/qBig5%d',i));
     saveas(gcf,sprintf('Figures/qBig5%d.eps',i),'epsc');
 

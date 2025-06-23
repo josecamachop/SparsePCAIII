@@ -61,12 +61,12 @@ for i=pcs
     plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
     axis([.5 13.5 -1 1])
     
-    f = plotMap([r(:,i)*p(:,i)'*X'*X*p(:,i)*r(:,i)']);
+    f = plotMap([r(:,i)*p(:,i)'*XX*p(:,i)*r(:,i)']);
     ylabel('Variables','Fontsize',16)
     xlabel('Variables','Fontsize',16);
 end
 
-f = plotMap([r*p'*X'*X*p*r'],'VarsLabel',var_l);
+f = plotMap([r*p'*XX*p*r'],'VarsLabel',var_l);
 a = get(f,'Children');
 set(a(2),'XTickLabelRotation',45); 
 

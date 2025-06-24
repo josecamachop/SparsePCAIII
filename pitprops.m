@@ -301,7 +301,7 @@ for j1=1:13
             for j4= 1:j3
                 for j5= 1:j4
                     for j6= 1:j5
-                        vec = [j1 j2 j3 j4 j5 j6];
+                        vec = [j1 j2 j3 j4 j5 j6]
                         for j=1:length(ridge)
                             for i=1:length(pcs)
                                 p = spca_zouhastie([], XX, pcs(i), ridge(j), -vec(1:pcs(i)));
@@ -411,7 +411,7 @@ for i=pcs
     saveas(gcf,sprintf('Figures/p%d',i));
     saveas(gcf,sprintf('Figures/p%d.eps',i),'epsc');
     
-    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    plotVec(-q(:,i),'XYLabel',{'Variables','Loadings (q)'});
     axis([.5 13.5 -1 1])
     saveas(gcf,sprintf('Figures/q%d',i));
     saveas(gcf,sprintf('Figures/q%d.eps',i),'epsc');

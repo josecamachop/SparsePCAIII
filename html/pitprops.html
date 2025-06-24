@@ -9,7 +9,7 @@ To make changes, update the MATLAB code and republish this document.
 <title>Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation"</title>
 <meta name="generator" content="MATLAB 24.2">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-04-01">
+<meta name="DC.date" content="2025-06-24">
 <meta name="DC.source" content="pitprops.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -385,10 +385,8 @@ save <span class="string">search_pitpropos</span>
 <pre class="codeoutput">
 total_time =
 
-   1.1844e+04
+   1.1506e+04
 
-Warning: Variable 'map' was not saved. For variables larger than 2GB use
-MAT-file version 7.3 or later. 
 </pre>
 <h2 id="8">Plot the razor plot</h2>
 <pre class="codeinput">ufp = unique(fp);
@@ -423,6 +421,8 @@ PEVfp2D = [];
     <span class="keyword">end</span>
 <span class="keyword">end</span>
 
+PEVfp2D(find(PEVfp2D==0)) = nan;
+
 figure
 surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
 hold <span class="string">on</span>
@@ -450,7 +450,7 @@ tic
             <span class="keyword">for</span> j4= 1:j3
                 <span class="keyword">for</span> j5= 1:j4
                     <span class="keyword">for</span> j6= 1:j5
-                        vec = [j1 j2 j3 j4 j5 j6];
+                        vec = [j1 j2 j3 j4 j5 j6]
                         <span class="keyword">for</span> j=1:length(ridge)
                             <span class="keyword">for</span> i=1:length(pcs)
                                 p = spca_zouhastie([], XX, pcs(i), ridge(j), -vec(1:pcs(i)));
@@ -488,9 +488,44 @@ thres =
     0.0500
 
 
+vec =
+
+     1     1     1     1     1     1
+
+
+vec =
+
+     2     1     1     1     1     1
+
+
+vec =
+
+     2     2     1     1     1     1
+
+
+vec =
+
+     2     2     2     1     1     1
+
+
+vec =
+
+     2     2     2     2     1     1
+
+
+vec =
+
+     2     2     2     2     2     1
+
+
+vec =
+
+     2     2     2     2     2     2
+
+
 total_time =
 
-    0.7345
+    0.7156
 
 </pre>
 <h2 id="11">Plot the truncated razor plot</h2>
@@ -563,7 +598,7 @@ r = q*inv(p'*q);
     saveas(gcf,sprintf(<span class="string">'Figures/p%d'</span>,i));
     saveas(gcf,sprintf(<span class="string">'Figures/p%d.eps'</span>,i),<span class="string">'epsc'</span>);
 
-    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Loadings (q)'</span>});
     axis([.5 13.5 -1 1])
     saveas(gcf,sprintf(<span class="string">'Figures/q%d'</span>,i));
     saveas(gcf,sprintf(<span class="string">'Figures/q%d.eps'</span>,i),<span class="string">'epsc'</span>);
@@ -861,6 +896,8 @@ for i=1:length(ufp)
     end
 end
 
+PEVfp2D(find(PEVfp2D==0)) = nan;
+
 figure
 surf((((ones(length(pcs),1)*ufp')))',(pcs'*ones(1,length(ufp)))',(PEVfp2D)')
 hold on
@@ -890,7 +927,7 @@ for j1=1:13
             for j4= 1:j3
                 for j5= 1:j4
                     for j6= 1:j5
-                        vec = [j1 j2 j3 j4 j5 j6];
+                        vec = [j1 j2 j3 j4 j5 j6]
                         for j=1:length(ridge)
                             for i=1:length(pcs)
                                 p = spca_zouhastie([], XX, pcs(i), ridge(j), -vec(1:pcs(i)));
@@ -1000,7 +1037,7 @@ for i=pcs
     saveas(gcf,sprintf('Figures/p%d',i));
     saveas(gcf,sprintf('Figures/p%d.eps',i),'epsc');
     
-    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    plotVec(-q(:,i),'XYLabel',{'Variables','Loadings (q)'});
     axis([.5 13.5 -1 1])
     saveas(gcf,sprintf('Figures/q%d',i));
     saveas(gcf,sprintf('Figures/q%d.eps',i),'epsc');

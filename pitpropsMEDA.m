@@ -4,7 +4,7 @@
 % Dependencies: MEDA Toolbox v1.8 at https://github.com/codaslab/MEDA-Toolbox
 %
 % coded by: Jose Camacho Paez (josecamacho@ugr.es)
-% last modification: 31/Mar/2025
+% last modification: 23/Jun/2025
 %
 % Copyright (C) 2025  University of Granada, Granada
 % 
@@ -41,15 +41,16 @@ XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.
 
 clc
 
+pcs = 1:6;
 
 %% PEV vs sparsity: SPCA-Z multi-component, truncated search
 
-[PEVpq, fp] = razorPlot([], XX, 6);
+[PEVpq, fp] = razorPlot([], XX, max(pcs), 'Threshold', 0.05);
 
 
 %% Visualize multi-model selected with 6 components with two non-zero weights each.
 
-model = spcaZou([], XX, 6, -[3,2,2,2,1,1]);
+model = spcaZou([], XX, 6, -[3,2,2,2,2,1]);
 p = model.weights;
 q = model.loads;
 r = model.altweights;
@@ -58,7 +59,7 @@ for i=pcs
     plotVec(-p(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
     axis([.5 13.5 -1 1])
     
-    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    plotVec(-q(:,i),'XYLabel',{'Variables','Loadings (q)'});
     axis([.5 13.5 -1 1])
     
     f = plotMap([r(:,i)*p(:,i)'*XX*p(:,i)*r(:,i)']);

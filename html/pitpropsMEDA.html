@@ -9,7 +9,7 @@ To make changes, update the MATLAB code and republish this document.
 <title>Pitprops from R package elsticnet "All Sparse PCA Models Are Wrong, But Some Are Useful. Part III: model interpretation"</title>
 <meta name="generator" content="MATLAB 24.2">
 <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
-<meta name="DC.date" content="2025-04-02">
+<meta name="DC.date" content="2025-06-24">
 <meta name="DC.source" content="pitpropsMEDA.m">
 <style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
@@ -81,7 +81,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 <p>Submitted to Chemometrics and Intelligent Laboratory Systems. 2025</p>
 <p>Dependencies: MEDA Toolbox v1.8 at <a href="https://github.com/codaslab/MEDA-Toolbox">https://github.com/codaslab/MEDA-Toolbox</a>
 </p>
-<p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 31/Mar/2025</p>
+<p>coded by: Jose Camacho Paez (<a href="mailto:josecamacho@ugr.es">josecamacho@ugr.es</a>) last modification: 23/Jun/2025</p>
 <p>Copyright (C) 2025 University of Granada, Granada</p>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
@@ -119,25 +119,63 @@ XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.
      0.134  0.144  0.126  0.015 -0.208  -0.329  -0.424 -0.202  -0.076 -0.291  0.007  0.184   1.000];
 
 clc
+
+pcs = 1:6;
 </pre>
 <h2 id="2">PEV vs sparsity: SPCA-Z multi-component, truncated search</h2>
-<pre class="codeinput">[PEVpq, fp] = razorPlot([], XX, 6);
+<pre class="codeinput">[PEVpq, fp] = razorPlot([], XX, max(pcs), <span class="string">'Threshold'</span>, 0.05);
 </pre>
-<pre class="codeoutput">Model with 1  1  1  1  1  1 non-zero elements y PEV = 0.79 (91% of the Reference). Time elapsed 0.0035153
-Model with 2  1  1  1  1  1 non-zero elements y PEV = 0.8 (91% of the Reference). Time elapsed 0.18912
-Model with 2  2  1  1  1  1 non-zero elements y PEV = 0.8 (92% of the Reference). Time elapsed 0.203658
-Model with 2  2  2  1  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.209743
-Model with 2  2  2  2  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.219778
-Model with 2  2  2  2  2  1 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.23098
-Model with 2  2  2  2  2  2 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.242326
-Model with 3  1  1  1  1  1 non-zero elements y PEV = 0.8 (92% of the Reference). Time elapsed 0.286787
-Model with 3  2  1  1  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.299754
-Model with 3  2  2  1  1  1 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.305634
-Model with 3  2  2  2  1  1 non-zero elements y PEV = 0.82 (95% of the Reference). Time elapsed 0.314305
-Finished, time elapsed 0.4798
+<pre class="codeoutput">Model with 1 non-zero elements y PEV = 0.26 (30% of the Reference). Time elapsed 0.008061
+Model with 1  1 non-zero elements y PEV = 0.4 (46% of the Reference). Time elapsed 0.015613
+Model with 1  1  1 non-zero elements y PEV = 0.51 (59% of the Reference). Time elapsed 0.0175518
+Model with 1  1  1  1 non-zero elements y PEV = 0.6 (69% of the Reference). Time elapsed 0.018019
+Model with 1  1  1  1  1 non-zero elements y PEV = 0.69 (79% of the Reference). Time elapsed 0.0184377
+Model with 1  1  1  1  1  1 non-zero elements y PEV = 0.79 (91% of the Reference). Time elapsed 0.0188688
+Model with 2 non-zero elements y PEV = 0.27 (31% of the Reference). Time elapsed 0.102295
+Model with 2  1 non-zero elements y PEV = 0.41 (47% of the Reference). Time elapsed 0.103058
+Model with 2  1  1 non-zero elements y PEV = 0.52 (60% of the Reference). Time elapsed 0.103607
+Model with 2  1  1  1 non-zero elements y PEV = 0.6 (69% of the Reference). Time elapsed 0.104191
+Model with 2  1  1  1  1 non-zero elements y PEV = 0.69 (80% of the Reference). Time elapsed 0.104808
+Model with 2  1  1  1  1  1 non-zero elements y PEV = 0.8 (91% of the Reference). Time elapsed 0.105466
+Model with 2  2 non-zero elements y PEV = 0.41 (47% of the Reference). Time elapsed 0.11354
+Model with 2  2  1 non-zero elements y PEV = 0.52 (60% of the Reference). Time elapsed 0.11449
+Model with 2  2  1  1 non-zero elements y PEV = 0.61 (70% of the Reference). Time elapsed 0.115495
+Model with 2  2  1  1  1 non-zero elements y PEV = 0.7 (80% of the Reference). Time elapsed 0.116393
+Model with 2  2  1  1  1  1 non-zero elements y PEV = 0.8 (92% of the Reference). Time elapsed 0.117221
+Model with 2  2  2 non-zero elements y PEV = 0.58 (66% of the Reference). Time elapsed 0.118959
+Model with 2  2  2  1 non-zero elements y PEV = 0.66 (76% of the Reference). Time elapsed 0.119863
+Model with 2  2  2  1  1 non-zero elements y PEV = 0.75 (86% of the Reference). Time elapsed 0.120779
+Model with 2  2  2  1  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.121767
+Model with 2  2  2  2 non-zero elements y PEV = 0.67 (77% of the Reference). Time elapsed 0.12385
+Model with 2  2  2  2  1 non-zero elements y PEV = 0.75 (86% of the Reference). Time elapsed 0.127421
+Model with 2  2  2  2  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.13153
+Model with 2  2  2  2  2 non-zero elements y PEV = 0.75 (87% of the Reference). Time elapsed 0.136498
+Model with 2  2  2  2  2  1 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.139296
+Model with 2  2  2  2  2  2 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.142618
+Model with 3 non-zero elements y PEV = 0.27 (31% of the Reference). Time elapsed 0.192944
+Model with 3  1 non-zero elements y PEV = 0.41 (47% of the Reference). Time elapsed 0.193822
+Model with 3  1  1 non-zero elements y PEV = 0.52 (60% of the Reference). Time elapsed 0.194823
+Model with 3  1  1  1 non-zero elements y PEV = 0.61 (70% of the Reference). Time elapsed 0.19584
+Model with 3  1  1  1  1 non-zero elements y PEV = 0.7 (80% of the Reference). Time elapsed 0.197046
+Model with 3  1  1  1  1  1 non-zero elements y PEV = 0.8 (92% of the Reference). Time elapsed 0.198645
+Model with 3  2 non-zero elements y PEV = 0.41 (47% of the Reference). Time elapsed 0.20586
+Model with 3  2  1 non-zero elements y PEV = 0.53 (60% of the Reference). Time elapsed 0.20733
+Model with 3  2  1  1 non-zero elements y PEV = 0.61 (70% of the Reference). Time elapsed 0.208299
+Model with 3  2  1  1  1 non-zero elements y PEV = 0.7 (81% of the Reference). Time elapsed 0.209336
+Model with 3  2  1  1  1  1 non-zero elements y PEV = 0.81 (93% of the Reference). Time elapsed 0.210408
+Model with 3  2  2 non-zero elements y PEV = 0.59 (67% of the Reference). Time elapsed 0.212083
+Model with 3  2  2  1 non-zero elements y PEV = 0.67 (77% of the Reference). Time elapsed 0.213007
+Model with 3  2  2  1  1 non-zero elements y PEV = 0.75 (87% of the Reference). Time elapsed 0.213938
+Model with 3  2  2  1  1  1 non-zero elements y PEV = 0.82 (94% of the Reference). Time elapsed 0.214981
+Model with 3  2  2  2 non-zero elements y PEV = 0.68 (78% of the Reference). Time elapsed 0.217371
+Model with 3  2  2  2  1 non-zero elements y PEV = 0.76 (87% of the Reference). Time elapsed 0.219528
+Model with 3  2  2  2  1  1 non-zero elements y PEV = 0.82 (95% of the Reference). Time elapsed 0.221678
+Model with 3  2  2  2  2 non-zero elements y PEV = 0.77 (88% of the Reference). Time elapsed 0.224361
+Model with 3  2  2  2  2  1 non-zero elements y PEV = 0.83 (95% of the Reference). Time elapsed 0.226578
+Finished, time elapsed 0.34349
 </pre>
 <img vspace="5" hspace="5" src="pitpropsMEDA_01.png" alt=""> <img vspace="5" hspace="5" src="pitpropsMEDA_02.png" alt=""> <h2 id="3">Visualize multi-model selected with 6 components with two non-zero weights each.</h2>
-<pre class="codeinput">model = spcaZou([], XX, 6, -[3,2,2,2,1,1]);
+<pre class="codeinput">model = spcaZou([], XX, 6, -[3,2,2,2,2,1]);
 p = model.weights;
 q = model.loads;
 r = model.altweights;
@@ -146,15 +184,15 @@ r = model.altweights;
     plotVec(-p(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
     axis([.5 13.5 -1 1])
 
-    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Sparse weights (p)'</span>});
+    plotVec(-q(:,i),<span class="string">'XYLabel'</span>,{<span class="string">'Variables'</span>,<span class="string">'Loadings (q)'</span>});
     axis([.5 13.5 -1 1])
 
-    f = plotMap([r(:,i)*p(:,i)'*X'*X*p(:,i)*r(:,i)']);
+    f = plotMap([r(:,i)*p(:,i)'*XX*p(:,i)*r(:,i)']);
     ylabel(<span class="string">'Variables'</span>,<span class="string">'Fontsize'</span>,16)
     xlabel(<span class="string">'Variables'</span>,<span class="string">'Fontsize'</span>,16);
 <span class="keyword">end</span>
 
-f = plotMap([r*p'*X'*X*p*r'],<span class="string">'VarsLabel'</span>,var_l);
+f = plotMap([r*p'*XX*p*r'],<span class="string">'VarsLabel'</span>,var_l);
 a = get(f,<span class="string">'Children'</span>);
 set(a(2),<span class="string">'XTickLabelRotation'</span>,45);
 </pre>
@@ -172,7 +210,7 @@ set(a(2),<span class="string">'XTickLabelRotation'</span>,45);
 % Dependencies: MEDA Toolbox v1.8 at https://github.com/codaslab/MEDA-Toolbox
 %
 % coded by: Jose Camacho Paez (josecamacho@ugr.es)
-% last modification: 31/Mar/2025
+% last modification: 23/Jun/2025
 %
 % Copyright (C) 2025  University of Granada, Granada
 % 
@@ -209,15 +247,16 @@ XX=[ 1.000  0.954  0.364  0.342 -0.129   0.313   0.496  0.424   0.592  0.545  0.
 
 clc
 
+pcs = 1:6;
 
 %% PEV vs sparsity: SPCA-Z multi-component, truncated search
 
-[PEVpq, fp] = razorPlot([], XX, 6);
+[PEVpq, fp] = razorPlot([], XX, max(pcs), 'Threshold', 0.05);
 
 
 %% Visualize multi-model selected with 6 components with two non-zero weights each.
 
-model = spcaZou([], XX, 6, -[3,2,2,2,1,1]);
+model = spcaZou([], XX, 6, -[3,2,2,2,2,1]);
 p = model.weights;
 q = model.loads;
 r = model.altweights;
@@ -226,15 +265,15 @@ for i=pcs
     plotVec(-p(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
     axis([.5 13.5 -1 1])
     
-    plotVec(-q(:,i),'XYLabel',{'Variables','Sparse weights (p)'});
+    plotVec(-q(:,i),'XYLabel',{'Variables','Loadings (q)'});
     axis([.5 13.5 -1 1])
     
-    f = plotMap([r(:,i)*p(:,i)'*X'*X*p(:,i)*r(:,i)']);
+    f = plotMap([r(:,i)*p(:,i)'*XX*p(:,i)*r(:,i)']);
     ylabel('Variables','Fontsize',16)
     xlabel('Variables','Fontsize',16);
 end
 
-f = plotMap([r*p'*X'*X*p*r'],'VarsLabel',var_l);
+f = plotMap([r*p'*XX*p*r'],'VarsLabel',var_l);
 a = get(f,'Children');
 set(a(2),'XTickLabelRotation',45); 
 

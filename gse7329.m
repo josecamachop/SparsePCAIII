@@ -37,7 +37,7 @@ ind = find(obs_l=="GSM176615"); X(ind,:) = []; obs_l(ind) = []; class(ind) = [];
 pcs = 1:3;
 
 
-%% Compute variance estimates for PCA with 5 PCs
+%% Compute variance estimates for PCA with 3 PCs
 
 X = preprocess2D(X); % autoscale
 model = pcaEig(X,'PCs',pcs);
